@@ -12,4 +12,8 @@ class Oystercard
     fail "Error - maximum balance of #{BALANCE_LIMIT} pounds" if (@balance + amount > BALANCE_LIMIT)
     @balance += amount
   end
+
+  def deduct(amount)
+    @balance -= amount
+  end
 end

@@ -9,11 +9,11 @@ describe Oystercard do
   end
 
   context 'top_up' do
-    it { is_expected.to respond_to(:top_up).with(1).argument }
 
     it 'adjusts balance by top up amount' do
       expect { subject.top_up(1) }.to change { subject.balance }.by(1)
     end
+  end
     
   context 'maximum balance' do
     # it 'raises error when Oystercard balance is greater than 90 pounds' do
@@ -26,7 +26,13 @@ describe Oystercard do
       subject.top_up(balance_limit)
       expect { subject.top_up(1) }.to raise_error("Error - maximum balance of #{balance_limit} pounds")
     end
-end  
+  end
+  
+  context 'deducts amount' do
 
-  end  
+    it 'deducts fare' do
+      subject.top_up(10)
+      expect { subject.deduct(5) }.to change { subject.balance }.by(-5)
+    end
+  end
 end
