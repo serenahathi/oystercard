@@ -2,27 +2,27 @@ require 'oystercard'
 
 describe Oystercard do
 
-  subject(:card) { described_class.new}
-
-  describe 'card' do
-    it 'has a default status of' do
-    expect(card).to have_attributes(:balance => 0)
-    end
-  end
+  subject(:card) { described_class.new }
 
   describe '#touch in' do
-    it { is_expected.to respond_to(:touch_in) }
 
     it 'changes status to true' do
+      card.top_up(10)
       card.touch_in
       expect(card).to be_in_journey
+    end
+
+    it 'prevents touching in when balance is below one pound' do
+      minimum_balance = Oystercard::BALANCE_MIN
+      message = "Insufficient funds - minimum balance is #{minimum_balance}"
+      expect { card.touch_in }.to raise_error message
     end
   end
 
   describe '#touch out' do
-    it { is_expected.to respond_to(:touch_out) }
 
     it 'changes status to false' do
+      card.top_up(10)
       card.touch_in  
       card.touch_out
       expect(card).not_to be_in_journey
