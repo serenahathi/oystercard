@@ -2,6 +2,7 @@ class Oystercard
   
   BALANCE_LIMIT = 90
   BALANCE_MIN = 1
+  MIN_CHARGE = 3
 
   attr_reader :balance
   def initialize(balance = 0, in_journey = nil)
@@ -19,6 +20,7 @@ class Oystercard
   end
 
   def touch_out
+    deduct(MIN_CHARGE)
     @in_journey = false
   end
 
@@ -26,6 +28,8 @@ class Oystercard
     fail "Error - maximum balance is #{BALANCE_LIMIT} pounds" if (balance + amount > BALANCE_LIMIT)
     @balance += amount
   end
+
+  private
 
   def deduct(amount)
     @balance -= amount
