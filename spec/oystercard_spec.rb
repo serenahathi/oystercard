@@ -58,6 +58,11 @@ describe Oystercard do
       card.touch_out
       expect(card.entry_station).to eq nil
     end
+
+    it "sets the exit station" do
+      card.touch_out(exit_station)
+      expect(card.exit_station).to eq exit_station
+    end
   end
 
   describe '#top_up' do
