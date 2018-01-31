@@ -6,6 +6,7 @@ describe Oystercard do
   let(:entry_station) { double "an entry station" }
   let(:exit_station) { double "an exit station" }
   let(:journey) { { entry_station: entry_station, exit_station: exit_station } }
+  # going to be a double for a new instance of journey
 
   context 'when new card is created' do
     it 'has a balance of 0' do
@@ -32,7 +33,7 @@ describe Oystercard do
       card.touch_in(entry_station)
     end
 
-    xit 'changes status to false' do
+    it 'changes status to false' do
       card.touch_out(exit_station)
       expect(card).not_to be_in_journey
     end
@@ -55,12 +56,12 @@ describe Oystercard do
     end
   end
 
-  describe '#journey_history' do
-    xit 'shows the entry and exit station for each completed journey' do
-      card.top_up(50)
-      card.touch_in(entry_station)
-      card.touch_out(exit_station)
-      expect(card.journey_history).to include journey
-    end
-  end
+  # describe '#journey_history' do
+  #   it 'shows the entry and exit station for each completed journey' do
+  #     card.top_up(50)
+  #     card.touch_in(entry_station)
+  #     card.touch_out(exit_station)
+  #     expect(card.journey_history).to include journey
+  #   end
+  # end
 end

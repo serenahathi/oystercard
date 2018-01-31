@@ -22,8 +22,20 @@ describe Journey do
   end
 
   describe '#fare' do
-    it 'returns the minimum fare for a journey' do
+    it 'returns the minimum fare if a journey is a complete' do
+      journey.start(entry_station)
+      journey.finish(exit_station)
       expect(journey.fare).to eq Journey::MINIMUM_FARE
+    end
+
+    it 'returns the penalty fare when I forget to touch out' do
+      journey.start(entry_station)
+      expect(journey.fare).to eq Journey::PENALTY_FARE
+    end
+
+    it 'returns the penalty fare when I forget to touch in' do
+      journey.finish(exit_station)
+      expect(journey.fare).to eq Journey::PENALTY_FARE
     end
   end
 
@@ -35,6 +47,7 @@ describe Journey do
     it 'returns true when journey is complete' do
       journey.start(entry_station)
       journey.finish(exit_station)
+      expect(journey.complete?).to be true
     end
   end
 
