@@ -3,13 +3,20 @@ require 'oystercard'
 describe Oystercard do
 
   subject(:card) { described_class.new }
-  let(:entry_station) { double "a station" }
+  let(:entry_station) { double "an entry station" }
+  let(:exit_station) { double "an exit station" }
 
-  describe 'balance' do
-    it 'when initialized has a balance of 0' do
+  context 'when new card is created' do
+    it 'has a balance of 0' do
       expect(card.balance).to eq 0
     end
 
+    it 'has an empty journey history' do
+      expect(card.journey_history).to match_array([]) 
+    end
+  end
+
+  describe 'balance' do
     it 'raises error when Oystercard balance is greater than 90 pounds' do
       balance_limit = Oystercard::BALANCE_LIMIT
       card.top_up(balance_limit)
@@ -36,7 +43,6 @@ describe Oystercard do
       card.touch_in(entry_station)
       expect(card.entry_station).to eq entry_station
     end
-
   end
 
   describe '#touch out' do
@@ -46,16 +52,16 @@ describe Oystercard do
     end
 
     it 'changes status to false' do
-      card.touch_out
+      card.touch_out(exit_station)
       expect(card).not_to be_in_journey
     end
 
     it 'deducts the minimum fare' do
-      expect { card.touch_out }.to change { card.balance }.by(-Oystercard::MINIMUM_FARE)
+      expect { card.touch_out(exit_station) }.to change { card.balance }.by(-Oystercard::MINIMUM_FARE)
     end
 
     it "resets the entry station" do
-      card.touch_out
+      card.touch_out(exit_station)
       expect(card.entry_station).to eq nil
     end
 
@@ -68,6 +74,15 @@ describe Oystercard do
   describe '#top_up' do
     it 'adjusts balance by top up amount' do
       expect { card.top_up(1) }.to change { card.balance }.by(1)
+    end
+  end
+
+  describe '#journey_history' do
+    it 'shows the entry and exit station for each completed journey' do
+      card.top_up(50)
+      card.touch_in(entry_station)
+      card.touch_out(exit_station)
+      expect(card.journey_history).to include({ entry_station: entry_station, exit_station: exit_station })
     end
   end
 end
