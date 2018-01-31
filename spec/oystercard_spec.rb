@@ -15,20 +15,20 @@ describe Oystercard do
       card.top_up(balance_limit)
       message = "Error - maximum balance is #{balance_limit} pounds"
       expect { card.top_up(1) }.to raise_error(message)
-    end 
+    end
   end
 
   describe '#touch in' do
-    xit 'changes status to true' do
+    it 'changes status to true' do
       card.top_up(10)
-      card.touch_in
+      card.touch_in(entry_station)
       expect(card).to be_in_journey
     end
 
-    xit 'prevents touching in when balance is below one pound' do
+    it 'prevents touching in when balance is below one pound' do
       minimum_balance = Oystercard::MINIMUM_FARE
       message = "Insufficient funds - minimum balance is #{minimum_balance}"
-      expect { card.touch_in }.to raise_error message
+      expect { card.touch_in(entry_station) }.to raise_error message
     end
 
     it 'remembers the entry station' do
@@ -45,13 +45,18 @@ describe Oystercard do
       card.touch_in(entry_station)
     end
 
-    xit 'changes status to false' do 
+    it 'changes status to false' do
       card.touch_out
       expect(card).not_to be_in_journey
     end
 
-    xit 'deducts the minimum fare' do
+    it 'deducts the minimum fare' do
       expect { card.touch_out }.to change { card.balance }.by(-Oystercard::MINIMUM_FARE)
+    end
+
+    it "resets the entry station" do
+      card.touch_out
+      expect(card.entry_station).to eq nil
     end
   end
 
