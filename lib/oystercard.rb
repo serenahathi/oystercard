@@ -4,29 +4,24 @@ class Oystercard
   MINIMUM_FARE = 1
 
 
-  attr_reader :balance, :entry_station, :exit_station, :journey_history
+  attr_reader :balance, :journey_history
 
   def initialize(balance = 0)
     @balance = balance
-    @entry_station = nil
-    @exit_station = nil
     @journey_history = []
   end
 
   def in_journey?
-    @entry_station != nil
+    journey_history.last[:exit_station] == nil
   end
 
   def touch_in(entry_station)
     fail "Insufficient funds - minimum balance is #{MINIMUM_FARE}" if insufficient_balance?
-    @entry_station = entry_station
     @journey_history << { entry_station: entry_station, exit_station: nil }
   end
 
   def touch_out(exit_station)
     deduct(MINIMUM_FARE)
-    @entry_station = nil
-    @exit_station = exit_station
     @journey_history.last[:exit_station] = exit_station
   end
 
