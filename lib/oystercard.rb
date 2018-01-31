@@ -17,7 +17,7 @@ class Oystercard
 
   def touch_in(entry_station)
     fail "Insufficient funds - minimum balance is #{MINIMUM_FARE}" if insufficient_balance?
-    @journey_history << { entry_station: entry_station, exit_station: nil }
+    @journey_history << { entry_station: entry_station}
   end
 
   def touch_out(exit_station)
