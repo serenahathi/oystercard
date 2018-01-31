@@ -1,7 +1,7 @@
 class Oystercard
 
   BALANCE_LIMIT = 90
-  MINIMUM_FARE = 1
+  MINIMUM_BALANCE = 1
 
 
   attr_reader :balance, :journey_history
@@ -16,13 +16,11 @@ class Oystercard
   end
 
   def touch_in(entry_station)
-    fail "Insufficient funds - minimum balance is #{MINIMUM_FARE}" if insufficient_balance?
-    @journey_history << { entry_station: entry_station}
+    fail "Insufficient funds - minimum balance is #{MINIMUM_BALANCE}" if insufficient_balance?
   end
 
   def touch_out(exit_station)
-    deduct(MINIMUM_FARE)
-    @journey_history.last[:exit_station] = exit_station
+    deduct(MINIMUM_BALANCE)
   end
 
   def top_up(amount)
@@ -37,7 +35,7 @@ class Oystercard
   end
 
   def insufficient_balance?
-    balance < MINIMUM_FARE
+    balance < MINIMUM_BALANCE
   end
 
   def balance_exceeded?(amount)
